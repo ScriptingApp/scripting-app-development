@@ -1,6 +1,6 @@
 ---
 name: scripting-app-development
-description: Develop, modify, debug, and validate Scripting App projects: TypeScript/TSX scripts, iOS-style pages, native APIs, Widgets, Live Activities, rich notifications, Shortcuts/Share Sheet intents, App Intents, and Safari browser scripts. Uses Scripting's official llms.txt as the API reference entry point.
+description: "Develop, modify, debug, and validate Scripting App projects: TypeScript/TSX scripts, iOS-style pages, native APIs, Widgets, Live Activities, rich notifications, Shortcuts/Share Sheet intents, App Intents, and Safari browser scripts. Uses Scripting's official llms.txt as the API reference entry point."
 ---
 
 # Scripting App Development
