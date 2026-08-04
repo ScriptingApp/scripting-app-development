@@ -28,14 +28,17 @@ SKILL.md                         Main routing, API lookup, validation, and safet
 references/                      Focused guides for project lifecycle, UI, native APIs,
                                  Widgets/App Intents, Live Activities, notifications/Intents,
                                  Safari scripts, desktop CLI, and validation/security
-templates/                       Minimal `script.json`, entry-point, Widget, Intent, and userscript starters
+templates/                       Document-verified starters for `script.json`, main/resident UI,
+                                 Widget/App Intents, Home Screen UI, Keyboard, notifications,
+                                 Control Widgets, Live Activities, Intents, Spotlight,
+                                 Translation UI, Assistant Tools, and Safari scripts
 checklists/                      Project creation, modification, desktop live-debug, and host E2E checks
 ```
 
 ## Development loop
 
 1. Identify the target Scripting host and entry point.
-2. Query `llms.txt` and the exact official API/capability page.
+2. Query the bundled Scripting reference/API declarations when available; otherwise query `llms.txt` and the exact official API/capability page.
 3. When available, initialize `scripting-cli`, connect the app, and inspect synced `.d.ts` files for the connected app version.
 4. Implement the smallest compatible change.
 5. Run diagnostics, CLI/live-sync checks, and applicable previews.

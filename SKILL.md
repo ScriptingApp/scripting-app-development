@@ -16,21 +16,21 @@ Use this skill for a Scripting project or any of these files/capabilities:
 - `browser.tsx` or a separately installed Safari `.user.js` script.
 - Desktop-editor live sync/debugging with `scripting-cli`.
 - Scripting-provided iOS APIs such as Notification, Calendar, Location, Photos, Storage, Speech, and Device.
-- Advanced entry points: control widgets, custom keyboard, Spotlight, Translation UI, and Assistant Tools.
+- Advanced entry points: Home Screen default UI, control widgets, custom keyboard, Spotlight, Translation UI, Assistant Tools, and Alarm Live Activities.
 
 Do not use it as a substitute for creating a standalone Apple Shortcut, ordinary Node/Python automation, or a generic web app.
 
 ## Mandatory official-documentation workflow
 
-Before writing or changing **any Scripting-specific API usage**, consult the official LLM documentation index:
+Before writing or changing **any Scripting-specific API usage**, use the current environment's bundled Scripting reference/API declarations when available (for example, `scripting_reference`). For desktop agents without that tool, consult the official LLM documentation index:
 
 ```text
 https://scriptingapp.github.io/llms.txt
 ```
 
-1. Search the index for the exact API, entry point, or capability.
-2. Fetch the relevant linked Markdown page(s). Resolve index-relative links against `https://scriptingapp.github.io/`.
-3. Verify the symbols to be used: import/global module, parameters, result type, async behavior, iOS/version availability, permissions, host constraints, and example patterns.
+1. Search the bundled docs first when available; otherwise search the public index for the exact API, entry point, or capability.
+2. Read the full matching documentation and exact API declarations—not only a search-result summary.
+3. Verify the symbols to be used: import/global module, parameters, result type, async behavior, iOS/version availability, permissions, host constraints, and official example patterns.
 4. Implement only APIs confirmed by the current documentation. Do not infer an API from Swift, React, old examples, or model memory.
 5. If a connected `scripting-cli` workspace is available, search its app-synced `.d.ts` declarations to confirm exact local TypeScript signatures/imports; use them with—not instead of—the official documentation's behavior, permission, and host constraints.
 
@@ -85,7 +85,7 @@ Read `references/project-and-lifecycle.md` before choosing or changing this beha
 | Desktop editor ↔ Scripting App sync/debugging | `references/desktop-cli.md` |
 | Native iOS API | `references/native-apis.md` plus official API page |
 | Safari browser script / userscript | `references/safari-browser-scripts.md` |
-| Keyboard, Spotlight, Translation UI, control widget, Assistant Tool | official `llms.txt` topic; add an entry file only after verifying it |
+| Keyboard, Home Screen UI, Spotlight, Translation UI, Assistant Tool, Alarm Live Activity | `references/additional-entry-points.md` plus exact bundled docs/API declaration |
 
 ## Validation requirements
 

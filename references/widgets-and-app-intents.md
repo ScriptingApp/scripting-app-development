@@ -1,32 +1,94 @@
-# Widgets and App Intents
+# Widgets, App Intents, and Control Widgets
 
-Read this for `widget.tsx`, `app_intents.tsx`, Widget buttons/toggles, or a control surface.
+Checked with `scripting_reference` against **Widget Quick Start**, **AppIntent**, **Interactive Widget and LiveActivity**, **Control Widget**, and the exact API declarations.
 
-## Static Widget
+## Static Widget (`widget.tsx`)
 
-- The file is `widget.tsx`.
-- Build a function component with Scripting's SwiftUI-style components.
-- Treat rendering as a snapshot: do **not** use `useState`, `useEffect`, timers, or local reactive state in Widget UI.
-- Adapt layout with `Widget.family`, `Widget.displaySize`, and, when documented for the design, `Widget.parameter`.
-- Fetch data before `Widget.present(<WidgetView />)` if necessary; keep data work bounded and failure-tolerant.
-- `Widget.present()` supplies content to the host. It does not add the Widget to the user's Home Screen.
+```tsx
+import { Text, VStack, Widget } from "scripting"
 
-## Interactive Widget and App Intent
+function WidgetView() {
+  return (
+    <VStack>
+      <Text>Hello Scripting!</Text>
+    </VStack>
+  )
+}
 
-1. Look up `AppIntent` and `AppIntentManager` from official docs before creating the action.
-2. Register business actions in `app_intents.tsx`; keep Widget UI declarative.
-3. Choose the documented intent protocol appropriate to the action (general App Intent, audio playback/recording, or Live Activity intent). Do not use a broad protocol by habit.
-4. Bind the registered intent to Widget/Live Activity `Button` or `Toggle` only with the documented syntax.
-5. After state changes, call the documented Widget refresh API (for example, `Widget.reloadAll()` when appropriate) so the visible snapshot is not stale.
-6. Validate duplicate taps, unavailable state, action failures, and state persistence.
+Widget.present(<WidgetView />)
+```
 
-## Design and validation
+Prepare all data before `Widget.present(...)`: the execution context is destroyed immediately afterward, so code after it does not run. Hooks have no active persistent lifecycle in Widget rendering. Adapt with `Widget.family`, `Widget.displaySize`, and `Widget.parameter`; valid families include `systemSmall`, `systemMedium`, `systemLarge`, `systemExtraLarge`, and accessory families.
 
-- Design intentionally for each target family; do not simply shrink one dense layout.
-- Use `scripting-ts widget "<project>" --family <family>` or equivalent preview if available.
-- Validate at least the requested families on the device after adding the Widget to the Home Screen.
-- Do not claim an Intent works system-wide until it has been triggered from the actual host surface.
+## App Intents (`app_intents.tsx`)
 
-## Storage and security
+All App Intents must be registered in `app_intents.tsx`. Import every Scripting API used; `Storage` is global.
 
-Use the smallest persistent state necessary. Treat Widget actions as untrusted/repeatable triggers: validate input and make actions safe to repeat. Do not place tokens or sensitive user content in Widget configuration or visible UI.
+```tsx
+import {
+  AppIntentManager,
+  AppIntentProtocol,
+  ControlWidget,
+  Widget,
+} from "scripting"
+
+export const RefreshIntent = AppIntentManager.register({
+  name: "RefreshIntent",
+  protocol: AppIntentProtocol.AppIntent,
+  perform: async (_params: undefined) => {
+    Widget.reloadAll()
+  },
+})
+
+export const SetEnabledIntent = AppIntentManager.register({
+  name: "SetEnabledIntent",
+  protocol: AppIntentProtocol.AppIntent,
+  perform: async ({ value }: { value: boolean }) => {
+    Storage.set("enabled", value)
+    Widget.reloadAll()
+    ControlWidget.reloadToggles()
+  },
+})
+```
+
+Use a protocol matching the action: `AppIntent`, `AudioPlaybackIntent`, `AudioRecordingIntent` (iOS 18+, requires a Live Activity during recording), or `LiveActivityIntent`.
+
+## Interactive Widget
+
+```tsx
+import { Button, Toggle, VStack, Widget } from "scripting"
+import { RefreshIntent, SetEnabledIntent } from "./app_intents"
+
+function WidgetView() {
+  const enabled = Storage.get<boolean>("enabled") ?? false
+
+  return (
+    <VStack>
+      <Button title="Refresh" intent={RefreshIntent(undefined)} />
+      <Toggle
+        title="Enabled"
+        value={enabled}
+        intent={SetEnabledIntent({ value: !enabled })}
+      />
+    </VStack>
+  )
+}
+
+Widget.present(<WidgetView />)
+```
+
+`Button` uses either `action` or `intent`, never both. A `Toggle` uses either `onChanged`, an `Observable<boolean>`, or an `intent` with its current `value`.
+
+## Control Widgets
+
+- `control_widget_button.tsx` may present only `ControlWidgetButton`.
+- `control_widget_toggle.tsx` may present only `ControlWidgetToggle`.
+- A toggle intent parameter must extend `{ value: boolean }`.
+- If an active value label is supplied, supply the inactive one too.
+- Call `ControlWidget.reloadButtons()` / `reloadToggles()` after relevant state changes.
+
+See the matching templates for minimal, type-correct entry files.
+
+## Validation
+
+Use Widget preview for the requested families, then add it to the actual Home Screen. Test every App Intent from its real Widget, Live Activity, or Control Widget host. Preview or registration alone is not host verification.

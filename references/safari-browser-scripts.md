@@ -13,7 +13,7 @@ Do not create both by default. Choose based on the user's distribution and manag
 
 ## Documentation and metadata
 
-Read the current **Safari Browser Scripts** topic from `https://scriptingapp.github.io/llms.txt` before using GM APIs, `Scripting.FileManager`, or metadata features.
+Use the current bundled **Safari Browser Scripts** document through `scripting_reference` when available; desktop agents can fall back to `https://scriptingapp.github.io/llms.txt`. Do this before using GM APIs, `Scripting.FileManager`, or metadata features.
 
 Every userscript begins with a metadata block. Keep it minimal:
 
@@ -30,7 +30,7 @@ Every userscript begins with a metadata block. Keep it minimal:
 - Add every privileged GM/Scripting API as its own `@grant`.
 - Add each external host required by cross-origin APIs/downloads/resources as a narrow `@connect` entry. Never use `@connect *` for convenience.
 - `@grant none` disables privileged GM APIs; do not mix it with GM methods.
-- Use `@inject-into page` only when the script does not need privileged APIs, after verifying current behavior.
+- `@inject-into auto` is the default: scripts with grants run in the privileged content world; scripts with no grant or `@grant none` run in the page world. Force `page` only when privileged APIs are unnecessary; grants are ignored there.
 
 ## Robust page behavior
 

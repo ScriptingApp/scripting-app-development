@@ -25,10 +25,10 @@ My Script/
 | `notification.tsx` | Expanded custom notification UI |
 | `intent.tsx` | Shortcuts and Share Sheet |
 | `browser.tsx` | Browser script bundled with this project |
-| `keyboard.tsx`, `spotlight.tsx`, `translation_ui_provider.tsx` | Dedicated system extension hosts |
-| `control_widget_button.tsx`, `control_widget_toggle.tsx`, `assistant_tool.tsx` | Opt-in system / assistant entry points |
+| `keyboard.tsx`, `spotlight.tsx`, `translation_ui_provider.tsx`, `home_screen_default_ui.tsx` | Dedicated keyboard, Spotlight, Translation UI, and Home tab hosts |
+| `control_widget_button.tsx`, `control_widget_toggle.tsx`, `assistant_tool.tsx`, `alarm_live_activity.tsx` | Opt-in control, assistant, and AlarmKit entry points |
 
-Only create the entry point that the user needs. For unfamiliar or advanced entries, find its official page from `https://scriptingapp.github.io/llms.txt` first.
+Only create the entry point that the user needs. Query it through `scripting_reference` before writing code; the public `llms.txt` index is a useful external fallback, not a substitute for the bundled declarations.
 
 ## Lifecycle choices
 
